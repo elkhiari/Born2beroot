@@ -1,0 +1,19 @@
+arc=$(uname -a) - This line sets a variable arc to the output of the uname -a command, which prints the system's architecture information.
+
+pcpu=$(grep "physical id" /proc/cpuinfo | sort | uniq | wc -l) - This line sets a variable pcpu to the number of physical CPUs on the system. It does this by grepping the physical id field in the /proc/cpuinfo file, sorting and removing duplicates, and counting the number of lines with the wc -l command.
+
+vcpu=$(grep "^processor" /proc/cpuinfo | wc -l) - This line sets a variable vcpu to the number of virtual CPUs on the system. It does this by grepping the processor field in the /proc/cpuinfo file and counting the number of lines with the wc -l command.
+
+fram=$(free -m | awk '$1 == "Mem:" {print $2}') - This line sets a variable fram to the total amount of installed memory in megabytes (MB) using the free command and awk to filter the output to the line that starts with "Mem:".
+
+uram=$(free -m | awk '$1 == "Mem:" {print $3}') - This line sets a variable uram to the amount of used memory in MB using the free command and awk to filter the output to the line that starts with "Mem:".
+
+pram=$(free | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}') - This line sets a variable pram to the percentage of used memory. It does this by dividing the used memory by the total memory and multiplying by 100, and then using awk to format the output to two decimal places.
+
+fdisk=$(df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}') - This line sets a variable fdisk to the total size of all mounted filesystems in GB using the df command and awk to filter the output to lines that start with "/dev/" and exclude "/boot". It then sums the size values and prints the result.
+
+udisk=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} END {print ut}') - This line sets a variable udisk to the used space on all mounted filesystems in MB using the df command and awk to filter the output to lines that start with "/dev/" and exclude "/boot". It then sums the used space values and prints the result.
+
+pdisk=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} {ft+= $2} END {printf("%d"), ut/ft*100}') - This line sets a variable pdisk to the percentage of used space on all mounted filesystems. It does this by dividing the sum of used space by the sum of total space, multiplying by 100, and rounding to the nearest integer.
+
+`cpul=$(top -bn1 | grep '^%Cpu' | cut -c 9- | x
